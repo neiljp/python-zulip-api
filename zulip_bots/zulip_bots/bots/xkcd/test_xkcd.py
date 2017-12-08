@@ -1,13 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from __future__ import absolute_import
-from __future__ import print_function
-
-import mock
 from mock import MagicMock, patch
-from zulip_bots.test_lib import BotTestCase
+from zulip_bots.test_lib import StubBotTestCase
 
-class TestXkcdBot(BotTestCase):
+class TestXkcdBot(StubBotTestCase):
     bot_name = "xkcd"
 
     def test_latest_command(self):
@@ -25,7 +21,7 @@ class TestXkcdBot(BotTestCase):
         with self.mock_http_conversation('test_random'):
             # Mock randint function.
             with patch('zulip_bots.bots.xkcd.xkcd.random.randint') as randint:
-                mock_rand_value = mock.MagicMock()
+                mock_rand_value = MagicMock()
                 mock_rand_value.return_value = 1800
                 randint.return_value = mock_rand_value.return_value
                 self.verify_reply('random', bot_response)
@@ -36,7 +32,7 @@ class TestXkcdBot(BotTestCase):
         with self.mock_http_conversation('test_specific_id'):
             self.verify_reply('1', bot_response)
 
-    @mock.patch('logging.exception')
+    @patch('logging.exception')
     def test_invalid_comic_ids(self, mock_logging_exception):
         invalid_id_txt = "Sorry, there is likely no xkcd comic strip with id: #"
 
